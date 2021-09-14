@@ -1,26 +1,76 @@
-import React from 'react'
+import React, { useReducer, useLayoutEffect } from 'react'
+import { v4 } from 'uuid'
+import { ThemeProvider } from 'styled-components'
 
-import { File } from './File/TreeFile'
-import { Folder } from './Folder/TreeFolder'
+import { useDidMountEffect } from './utils'
 
-const Tree = ({ data, children }) => {
-  const isImperative = data && !children
+import { StyledTree } from '../components/Tree.style'
 
-  return <>{isImperative ? <TreeRecursive data={data} /> : children}</>
+import { Folder } from '../components/Folder/TreeFolder'
+
+import { File } from '../components/File/TreeFile'
+
+import { TreeContext, reducer } from './context'
+
+const Tree = ({ children, data, onNodeClick, onUpdate }) => {
+  const [state, dispatch] = useReducer(reducer, data)
+
+  useLayoutEffect(() => {
+    dispatch({ type: 'SET_DATA', payload: data })
+  }, [data])
+
+  useDidMountEffect(() => {
+    onUpdate && onUpdate(state)
+  }, [state])
+
+  const isImparative = data && !children
+
+  return (
+    <ThemeProvider theme={{ indent: 20 }}>
+      <TreeContext.Provider
+        value={{
+          isImparative,
+          state,
+          dispatch,
+          onNodeClick: (node) => {
+            onNodeClick && onNodeClick(node)
+          },
+        }}
+      >
+        <StyledTree>
+          {isImparative ? (
+            <TreeRecusive data={state} parentNode={state} />
+          ) : (
+            children
+          )}
+        </StyledTree>
+      </TreeContext.Provider>
+    </ThemeProvider>
+  )
 }
-const TreeRecursive = ({ data }) => {
-  // loop through the data
+
+const TreeRecusive = ({ data, parentNode }) => {
   return data.map((item) => {
+    item.parentNode = parentNode
+    if (!parentNode) {
+      item.parentNode = data
+    }
+    if (!item.id) item.id = v4()
+
     if (item.type === 'file') {
-      return <File name={item.name} />
+      return <File key={item.id} id={item.id} name={item.name} node={item} />
     }
     if (item.type === 'folder') {
       return (
-        <Folder name={item.name}>
-          <TreeRecursive data={item.childrens} />
+        <Folder key={item.id} id={item.id} name={item.name} node={item}>
+          <TreeRecusive parentNode={item} data={item.files} />
         </Folder>
       )
     }
   })
 }
+
+Tree.File = File
+Tree.Folder = Folder
+
 export default Tree

@@ -1,30 +1,85 @@
+import React, { useState, useLayoutEffect } from 'react'
 import './App.css'
+
 import Tree from './components/Tree'
-const data = [
+
+const structure = [
   {
     type: 'folder',
-    name: 'folder:1',
-    childrens: [
+    name: 'marvel',
+    files: [
       {
         type: 'folder',
-        name: 'folder:1-1',
-        childrens: [
-          { type: 'file', name: 'folder:1-1.file:1.js' },
-          { type: 'file', name: 'folder:1-1.file:1.css' },
+        name: 'black_widow',
+        files: [
+          { type: 'file', name: 'bw.png' },
+          { type: 'file', name: 'why-the-widow-is-awesome.txt' },
         ],
       },
-      { type: 'file', name: 'file:1.js' },
-      { type: 'file', name: 'file:2.html' },
+      {
+        type: 'folder',
+        name: 'drdoom',
+        files: [{ type: 'file', name: 'the-doctor.png' }],
+      },
+      { type: 'file', name: 'marvel_logo.png' },
     ],
   },
-  { type: 'file', name: 'file.png' },
+  {
+    type: 'folder',
+    name: 'dc',
+    files: [
+      {
+        type: 'folder',
+        name: 'aquaman',
+        files: [
+          { type: 'file', name: 'mmmmmomoa.png' },
+          { type: 'file', name: 'movie-review-collection.txt' },
+        ],
+      },
+
+      { type: 'file', name: 'character_list.txt' },
+    ],
+  },
+  { type: 'file', name: 'fact_marvel_beats_dc.txt' },
 ]
-function App() {
+
+export default function App() {
+  let [data, setData] = useState(structure)
+
+  const handleClick = (node) => {
+    console.log(node)
+  }
+  const handleUpdate = (state) => {
+    localStorage.setItem(
+      'tree',
+      JSON.stringify(state, function (key, value) {
+        if (key === 'parentNode' || key === 'id') {
+          return null
+        }
+        return value
+      })
+    )
+  }
+
+  useLayoutEffect(() => {
+    try {
+      let savedStructure = JSON.parse(localStorage.getItem('tree'))
+      if (savedStructure) {
+        setData(savedStructure)
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }, [])
+
   return (
     <div className='App'>
-      <Tree data={data} />
+      <h2>hello</h2>
+
+      <div className='container'>
+        {' '}
+        <Tree data={data} onUpdate={handleUpdate} onNodeClick={handleClick} />
+      </div>
     </div>
   )
 }
-
-export default App

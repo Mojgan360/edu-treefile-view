@@ -1,29 +1,76 @@
-import React from 'react'
-import styled from 'styled-components'
+import React, { useRef, useState } from 'react'
 
-import { AiOutlineFile } from 'react-icons/ai'
+import { AiOutlineFile, AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai'
 
-import FILE_ICONS from '../FileIcons'
+import { StyledFile } from '../../components/File/TreeFile.style'
 
-const File = ({ name }) => {
-  //to get an extension
-  let ext = name.split('.')[1]
+import { useTreeContext } from '../context/TreeContext'
+
+import { ActionsWrapper, StyledName } from '../../components/Tree.style'
+
+import { PlaceholderInput } from '../../components/TreePlaceholderInput'
+
+import { FILE } from '../context/constants'
+
+import FILE_ICONS from '../../components/FileIcons'
+
+const File = ({ name, id, node }) => {
+  const { dispatch, isImparative, onNodeClick } = useTreeContext()
+  const [isEditing, setEditing] = useState(false)
+  const ext = useRef('')
+
+  let splitted = name?.split('.')
+  ext.current = splitted[splitted.length - 1]
+
+  const toggleEditing = () => setEditing(!isEditing)
+  const commitEditing = (name) => {
+    dispatch({ type: FILE.EDIT, payload: { id, name } })
+    setEditing(false)
+  }
+  const commitDelete = () => {
+    dispatch({ type: FILE.DELETE, payload: { id } })
+  }
+  const handleNodeClick = React.useCallback(
+    (e) => {
+      e.stopPropagation()
+      onNodeClick({ node })
+    },
+    [node]
+  )
+  const handleCancel = () => {
+    setEditing(false)
+  }
 
   return (
-    <StyledFile>
-      {/* foe render an extension or fallback to generic file icon  */}
-      {FILE_ICONS[ext] || <AiOutlineFile />}
-      <span>{name}</span>
+    <StyledFile onClick={handleNodeClick} className='tree__file'>
+      {isEditing ? (
+        <PlaceholderInput
+          type='file'
+          style={{ paddingLeft: 0 }}
+          defaultValue={name}
+          onSubmit={commitEditing}
+          onCancel={handleCancel}
+        />
+      ) : (
+        <ActionsWrapper>
+          <StyledName>
+            {FILE_ICONS[ext.current] ? (
+              FILE_ICONS[ext.current]
+            ) : (
+              <AiOutlineFile />
+            )}
+            &nbsp;&nbsp;{name}
+          </StyledName>
+          {isImparative && (
+            <div className='actions'>
+              <AiOutlineEdit onClick={toggleEditing} />
+              <AiOutlineDelete onClick={commitDelete} />
+            </div>
+          )}
+        </ActionsWrapper>
+      )}
     </StyledFile>
   )
 }
-export { File }
 
-const StyledFile = styled.div`
-  padding-left: 20px;
-  display: flex;
-  align-items: center;
-  span {
-    margin-left: 5px;
-  }
-`
+export { File }

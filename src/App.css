@@ -2,6 +2,9 @@ body {
   width: 90vw;
   max-width: 900px;
   margin: 0 auto;
-  background-color: gray;
-  color: aliceblue;
+}
+.App {
+  padding: 10px;
+  font-family: 'PT Sans';
+  color: #353535;
 }
