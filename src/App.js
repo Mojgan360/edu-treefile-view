@@ -1,7 +1,7 @@
 import React, { useState, useLayoutEffect } from 'react'
-import './App.css'
+import './styles.css'
 
-import Tree from './components/Tree'
+import Tree from './Tree/Tree'
 
 const structure = [
   {
@@ -74,12 +74,9 @@ export default function App() {
 
   return (
     <div className='App'>
-      <h2>hello</h2>
+      <h2>Title:</h2>
 
-      <div className='container'>
-        {' '}
-        <Tree data={data} onUpdate={handleUpdate} onNodeClick={handleClick} />
-      </div>
+      <Tree data={data} onUpdate={handleUpdate} onNodeClick={handleClick} />
     </div>
   )
 }

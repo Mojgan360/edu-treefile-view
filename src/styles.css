@@ -1,8 +1,9 @@
 body {
   width: 90vw;
-  max-width: 900px;
+  max-width: 600px;
   margin: 0 auto;
 }
+
 .App {
   padding: 10px;
   font-family: 'PT Sans';
