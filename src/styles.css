@@ -9,3 +9,8 @@ body {
   font-family: 'PT Sans';
   color: #353535;
 }
+
+.container {
+  background-color: #ebf5fb;
+  padding: 2rem;
+}

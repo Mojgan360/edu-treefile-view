@@ -1,4 +1,4 @@
-import styled from "styled-components/macro";
+import styled from 'styled-components/macro'
 
 export const StyledFolder = styled.section`
   font-weight: bold;
@@ -6,4 +6,4 @@ export const StyledFolder = styled.section`
   .tree__file {
     padding-left: ${(p) => p.theme.indent}px;
   }
-`;
+`

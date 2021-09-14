@@ -1,4 +1,4 @@
-import styled from "styled-components/macro";
+import styled from 'styled-components/macro'
 
 export const StyledFile = styled.div`
   flex-wrap: nowrap;
@@ -6,4 +6,4 @@ export const StyledFile = styled.div`
   align-items: center;
   font-weight: normal;
   padding-left: ${(p) => p.theme.indent}px;
-`;
+`

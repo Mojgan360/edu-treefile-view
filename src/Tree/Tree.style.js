@@ -61,6 +61,7 @@ export const Collapse = styled.div`
 
 export const VerticalLine = styled.section`
   position: relative;
+
   :before {
     content: '';
     display: block;

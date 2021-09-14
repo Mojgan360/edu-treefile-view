@@ -74,7 +74,9 @@ export default function App() {
 
   return (
     <div className='App'>
-      <h2>Title:</h2>
+      <h2 className='container'>Build a UI to visualise a file tree</h2>
+
+      <hr />
 
       <Tree data={data} onUpdate={handleUpdate} onNodeClick={handleClick} />
     </div>
